@@ -1,0 +1,111 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Profile - Video Platform{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <!-- Profile Picture and Basic Info -->
+        <div class="card">
+            <div class="card-body text-center">
+                {% if profile.profile_image %}
+                    <img src="{{ profile.profile_image.url }}" alt="Profile Picture" 
+                         class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                {% else %}
+                    <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                         style="width: 150px; height: 150px;">
+                        <i class="fas fa-user fa-4x text-white"></i>
+                    </div>
+                {% endif %}
+                
+                <h5 class="card-title">{{ profile.display_name|default:user.username }}</h5>
+                <p class="text-muted">{{ user.get_user_type_display }}</p>
+                <p class="text-muted">{{ user.email }}</p>
+                
+                <!-- Profile Completion -->
+                <div class="mb-3">
+                    <small class="text-muted">Profile Completion</small>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar" role="progressbar" 
+                             style="width: {{ completion_percentage }}%"
+                             aria-valuenow="{{ completion_percentage }}" 
+                             aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                    </div>
+                    <small class="text-muted">{{ completion_percentage }}%</small>
+                </div>
+                
+                <a href="{% url 'accounts:profile_edit' %}" class="btn btn-primary">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </a>
+                <a href="{% url 'accounts:account_settings' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <!-- Profile Information -->
+        <div class="card">
+            <div class="card-header">
+                <h5>Profile Information</h5>
+            </div>
+            <div class="card-body">
+                {% if profile.bio %}
+                    <div class="mb-3">
+                        <h6>About</h6>
+                        <p>{{ profile.bio }}</p>
+                    </div>
+                {% endif %}
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Contact Information</h6>
+                        <ul class="list-unstyled">
+                            <li><strong>Email:</strong> {{ user.email }}</li>
+                            {% if profile.phone_number %}
+                                <li><strong>Phone:</strong> {{ profile.phone_number }}</li>
+                            {% endif %}
+                            {% if profile.date_of_birth %}
+                                <li><strong>Date of Birth:</strong> {{ profile.date_of_birth|date:"F d, Y" }}</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        {% if user.is_student %}
+                            <h6>Academic Information</h6>
+                            <ul class="list-unstyled">
+                                {% if profile.school_organization %}
+                                    <li><strong>School/Organization:</strong> {{ profile.school_organization }}</li>
+                                {% endif %}
+                                {% if profile.grade_level %}
+                                    <li><strong>Grade Level:</strong> {{ profile.grade_level }}</li>
+                                {% endif %}
+                            </ul>
+                        {% elif user.is_judge %}
+                            <h6>Professional Information</h6>
+                            <ul class="list-unstyled">
+                                {% if profile.expertise_area %}
+                                    <li><strong>Expertise Area:</strong> {{ profile.expertise_area }}</li>
+                                {% endif %}
+                                {% if profile.years_experience %}
+                                    <li><strong>Years of Experience:</strong> {{ profile.years_experience }}</li>
+                                {% endif %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="mt-3">
+                    <small class="text-muted">
+                        Member since {{ user.date_joined|date:"F Y" }} | 
+                        Last updated {{ profile.updated_at|date:"F d, Y" }}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Edit Profile - Video Platform{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4>Edit Profile</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <strong>Please correct the errors below:</strong>
+                            {{ form.errors }}
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Basic Information -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.first_name.id_for_label }}" class="form-label">First Name</label>
+                            {{ form.first_name }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.last_name.id_for_label }}" class="form-label">Last Name</label>
+                            {{ form.last_name }}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.bio.id_for_label }}" class="form-label">Bio</label>
+                        {{ form.bio }}
+                        <div class="form-text">Tell us about yourself (max 500 characters)</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.profile_image.id_for_label }}" class="form-label">Profile Picture</label>
+                        {{ form.profile_image }}
+                        <div class="form-text">Upload a profile picture (max 5MB)</div>
+                    </div>
+                    
+                    <!-- Contact Information -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.phone_number.id_for_label }}" class="form-label">Phone Number</label>
+                            {{ form.phone_number }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.date_of_birth.id_for_label }}" class="form-label">Date of Birth</label>
+                            {{ form.date_of_birth }}
+                        </div>
+                    </div>
+                    
+                    <!-- Role-specific fields -->
+                    {% if user.is_student %}
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.school_organization.id_for_label }}" class="form-label">School/Organization</label>
+                                {{ form.school_organization }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.grade_level.id_for_label }}" class="form-label">Grade Level</label>
+                                {{ form.grade_level }}
+                            </div>
+                        </div>
+                    {% elif user.is_judge %}
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.expertise_area.id_for_label }}" class="form-label">Expertise Area</label>
+                                {{ form.expertise_area }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.years_experience.id_for_label }}" class="form-label">Years of Experience</label>
+                                {{ form.years_experience }}
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'accounts:profile' %}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

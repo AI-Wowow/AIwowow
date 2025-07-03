@@ -1,0 +1,49 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Account Settings - Video Platform{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4>Account Settings</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            {{ form.errors }}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
+                        {{ form.username }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.email.id_for_label }}" class="form-label">Email Address</label>
+                        {{ form.email }}
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'accounts:profile' %}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+                
+                <hr>
+                
+                <div class="mt-4">
+                    <h6>Other Actions</h6>
+                    <a href="#" class="btn btn-outline-warning btn-sm">Change Password</a>
+                    <a href="#" class="btn btn-outline-danger btn-sm">Deactivate Account</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

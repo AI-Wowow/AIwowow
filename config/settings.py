@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'allauth.account.middleware.AccountMiddleware', 
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -172,7 +173,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # File upload settings
 FILE_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 50  # 50MB
 DATA_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 500  # 500MB
-MAX_FILE_SIZE = config('MAX_FILE_SIZE', default=524288000, cast=int)  # 500MB
+MAX_FILE_SIZE = config('MAX_FILE_SIZE', default='524288000', cast=int)  # 500MB
 
 # Video settings
 ALLOWED_VIDEO_EXTENSIONS = config(
@@ -193,3 +194,8 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
+
+# Authentication URLs
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/accounts/dashboard/'
+LOGOUT_REDIRECT_URL = '/'

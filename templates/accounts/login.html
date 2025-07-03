@@ -1,0 +1,43 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Login - Video Platform{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4>Login</h4>
+            </div>
+            <div class="card-body">
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <strong>Please correct the errors below:</strong>
+                        <ul class="mb-0">
+                            {% for field, errors in form.errors.items %}
+                                {% for error in errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label">Email:</label>
+                        <input type="email" class="form-control" name="username" id="id_username" value="{{ form.username.value|default:'' }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_password" class="form-label">Password:</label>
+                        <input type="password" class="form-control" name="password" id="id_password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <a href="{% url 'accounts:signup' %}" class="btn btn-link">Don't have an account? Sign up</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
