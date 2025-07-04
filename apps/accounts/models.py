@@ -2,7 +2,13 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
+from django.utils import timezone
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 import os
+import uuid
+from datetime import timedelta
 
 
 def user_profile_image_path(instance, filename):
@@ -32,6 +38,10 @@ class User(AbstractUser):
         default=False,
         help_text=_('Email verification status')
     )
+    is_approved = models.BooleanField(
+        default=True,
+        help_text=_('Admin approval status (judges require approval)')
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -55,8 +65,57 @@ class User(AbstractUser):
     def is_judge(self):
         return self.user_type == 'judge'
     
+    @property
+    def can_access_platform(self):
+        """Check if user can access platform features"""
+        return self.is_verified and self.is_approved
+    
     def get_absolute_url(self):
         return reverse('accounts:profile')
+    
+    def generate_verification_token(self):
+        """Generate email verification token"""
+        return default_token_generator.make_token(self)
+    
+    def get_verification_link(self, request):
+        """Generate email verification link"""
+        from django.utils.encoding import force_bytes
+        from django.utils.http import urlsafe_base64_encode
+        
+        uid = urlsafe_base64_encode(force_bytes(self.pk))
+        token = self.generate_verification_token()
+        
+        return request.build_absolute_uri(
+            reverse('accounts:verify_email', kwargs={'uidb64': uid, 'token': token})
+        )
+
+
+class EmailVerification(models.Model):
+    """Track email verification attempts"""
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    email = models.EmailField()
+    token = models.CharField(max_length=100, unique=True, default=uuid.uuid4)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    is_used = models.BooleanField(default=False)
+    
+    class Meta:
+        db_table = 'accounts_emailverification'
+        ordering = ['-created_at']
+    
+    def save(self, *args, **kwargs):
+        if not self.expires_at:
+            self.expires_at = timezone.now() + timedelta(hours=24)
+        super().save(*args, **kwargs)
+    
+    @property
+    def is_expired(self):
+        return timezone.now() > self.expires_at
+    
+    @property
+    def is_valid(self):
+        return not self.is_used and not self.is_expired
 
 
 class UserProfile(models.Model):
@@ -169,6 +228,11 @@ def create_user_profile(sender, instance, created, **kwargs):
     """Create a UserProfile when a User is created"""
     if created:
         UserProfile.objects.create(user=instance)
+        
+        # Set judge approval status
+        if instance.user_type == 'judge':
+            instance.is_approved = False
+            instance.save()
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
@@ -177,3 +241,6 @@ def save_user_profile(sender, instance, **kwargs):
         instance.profile.save()
     else:
         UserProfile.objects.create(user=instance)
+
+
+

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Judge Application Approved - {{ site_name }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            background-color: #17a2b8;
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+        }
+        .content {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 0 0 8px 8px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #17a2b8;
+            color: white;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⚖️ Congratulations!</h1>
+        <p>Your Judge Application Has Been Approved</p>
+    </div>
+    
+    <div class="content">
+        <h2>Welcome, Judge {{ user.profile.display_name|default:user.username }}!</h2>
+        
+        <p>Great news! Your application to become a judge on {{ site_name }} has been approved by our administrators.</p>
+        
+        <p>You now have full access to judge features, including:</p>
+        <ul>
+            <li>🎥 Review student video submissions</li>
+            <li>📊 Provide detailed evaluations and scoring</li>
+            <li>💬 Leave constructive feedback for students</li>
+            <li>📈 Access judge dashboard and analytics</li>
+        </ul>
+        
+        <div style="text-align: center;">
+            <a href="/accounts/dashboard/" class="button">Access Judge Dashboard</a>
+        </div>
+        
+        <p>Thank you for joining our community of expert judges. Your expertise and feedback will help students improve and grow.</p>
+        
+        <p>If you have any questions about the judging process or need assistance, please don't hesitate to contact our support team.</p>
+    </div>
+    
+    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 14px;">
+        <p>Best regards,<br>The {{ site_name }} Team</p>
+    </div>
+</body>
+</html>

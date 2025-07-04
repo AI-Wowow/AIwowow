@@ -153,3 +153,22 @@ class UserAccountForm(forms.ModelForm):
         if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError('Email address already in use.')
         return email
+
+
+class AccountDeactivationForm(forms.Form):
+    """Form for account deactivation confirmation."""
+    confirm = forms.BooleanField(
+        label='I understand that my account will be permanently deleted.',
+        required=True,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+    )
+    feedback = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 3,
+            'placeholder': 'Please provide any feedback before you go (optional).',
+        }),
+        label='Feedback (optional)',
+        max_length=500,
+    )

@@ -1,0 +1,28 @@
+{% extends "base/base.html" %}
+
+{% block title %}Verification Sent{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card text-center">
+                <div class="card-header">
+                    <h2 class="card-title">Email Verification Sent</h2>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">We have sent a verification email to your email address.</p>
+                    <p class="card-text">Please check your inbox and click on the verification link to complete your registration.</p>
+                    <p class="card-text">If you don't see the email, please check your spam folder.</p>
+                    <hr>
+                    <p class="card-text">Once your email is verified, you can log in to your account.</p>
+                    <a href="{% url 'accounts:login' %}" class="btn btn-primary">Go to Login</a>
+                </div>
+                <div class="card-footer text-muted">
+                    Thank you for joining our platform!
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

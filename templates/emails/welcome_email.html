@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to {{ site_name }}!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            background-color: #28a745;
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+        }
+        .content {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 0 0 8px 8px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            margin: 10px 5px;
+            font-weight: bold;
+        }
+        .feature-box {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎉 Welcome to {{ site_name }}!</h1>
+        <p>Your email has been verified successfully</p>
+    </div>
+    
+    <div class="content">
+        <h2>Hello {{ user.profile.display_name|default:user.username }}!</h2>
+        
+        <p>Congratulations! Your email address has been verified and your {{ site_name }} account is now active.</p>
+        
+        {% if user.is_student %}
+        <div class="feature-box">
+            <h4>🎬 As a Student, you can:</h4>
+            <ul>
+                <li>Upload and submit videos for evaluation</li>
+                <li>View feedback and scores from judges</li>
+                <li>Track your submission history</li>
+                <li>Update your profile and academic information</li>
+            </ul>
+        </div>
+        {% elif user.is_judge %}
+        <div class="feature-box">
+            <h4>⚖️ As a Judge, you can:</h4>
+            <ul>
+                <li>Review and evaluate student video submissions</li>
+                <li>Provide detailed feedback and scoring</li>
+                <li>Access your evaluation dashboard</li>
+                <li>Manage your expertise profile</li>
+            </ul>
+        </div>
+        {% endif %}
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="/accounts/dashboard/" class="button">Go to Dashboard</a>
+            <a href="/accounts/profile/" class="button">Complete Profile</a>
+        </div>
+        
+        <p>We're excited to have you as part of our community! If you have any questions or need assistance getting started, don't hesitate to reach out.</p>
+    </div>
+    
+    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 14px;">
+        <p>Best regards,<br>The {{ site_name }} Team</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Account Deactivated - {{ site_name }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            background-color: #6c757d;
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+        }
+        .content {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 0 0 8px 8px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Account Deactivated</h1>
+        <p>{{ site_name }}</p>
+    </div>
+    
+    <div class="content">
+        <h2>Goodbye, {{ user.profile.display_name|default:user.username }}</h2>
+        
+        <p>Your {{ site_name }} account has been successfully deactivated as requested.</p>
+        
+        <p><strong>What this means:</strong></p>
+        <ul>
+            <li>Your profile and videos are now hidden from other users</li>
+            <li>You no longer have access to platform features</li>
+            <li>Your account data is preserved for potential reactivation</li>
+        </ul>
+        
+        {% if deactivation.reason %}
+        <p><strong>Reason:</strong> {{ deactivation.get_reason_display }}</p>
+        {% endif %}
+        
+        <p>If you change your mind, you can request account reactivation at any time. Reactivation requests are reviewed by our administrators.</p>
+        
+        <div style="text-align: center;">
+            <a href="/accounts/reactivation-request/" class="button">Request Reactivation</a>
+        </div>
+        
+        <p>Thank you for being part of our community. We hope to see you again in the future!</p>
+    </div>
+</body>
+</html>

@@ -4,10 +4,10 @@
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-8">
         <div class="card">
             <div class="card-header">
-                <h4>Account Settings</h4>
+                <h4><i class="fas fa-cog me-2"></i>Account Settings</h4>
             </div>
             <div class="card-body">
                 <form method="post">
@@ -27,20 +27,62 @@
                     <div class="mb-3">
                         <label for="{{ form.email.id_for_label }}" class="form-label">Email Address</label>
                         {{ form.email }}
+                        <div class="form-text">Changing your email will require re-verification</div>
                     </div>
                     
                     <div class="d-flex justify-content-between">
                         <a href="{% url 'accounts:profile' %}" class="btn btn-secondary">Cancel</a>
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Save Changes
+                        </button>
                     </div>
                 </form>
-                
-                <hr>
-                
-                <div class="mt-4">
-                    <h6>Other Actions</h6>
-                    <a href="#" class="btn btn-outline-warning btn-sm">Change Password</a>
-                    <a href="#" class="btn btn-outline-danger btn-sm">Deactivate Account</a>
+            </div>
+        </div>
+        
+        <!-- Security Actions -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5><i class="fas fa-shield-alt me-2"></i>Security</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Password</h6>
+                        <p class="text-muted">Keep your account secure with a strong password</p>
+                        <a href="{% url 'accounts:change_password' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-key me-2"></i>Change Password
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Two-Factor Authentication</h6>
+                        <p class="text-muted">Add an extra layer of security (Coming Soon)</p>
+                        <button class="btn btn-outline-secondary" disabled>
+                            <i class="fas fa-mobile-alt me-2"></i>Enable 2FA
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Danger Zone -->
+        <div class="card mt-4 border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5><i class="fas fa-exclamation-triangle me-2"></i>Danger Zone</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h6>Deactivate Account</h6>
+                        <p class="text-muted mb-0">
+                            Deactivate your account and hide your profile. You can request reactivation later.
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <a href="{% url 'accounts:deactivate_account' %}" class="btn btn-outline-danger">
+                            <i class="fas fa-times-circle me-2"></i>Deactivate Account
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
