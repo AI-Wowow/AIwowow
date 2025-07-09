@@ -1,6 +1,14 @@
 """
 Django settings for video platform project.
 """
+# Cloud SQL Python Connector patch
+# This must be imported and called before any other Django imports.
+try:
+    from cloud_sql_python_connector.django.pre_settings import patch
+    patch()
+except ImportError:
+    pass
+
 import os
 from pathlib import Path
 from decouple import config
@@ -95,6 +103,7 @@ DATABASES = {
     }
 }
 
+
 # Custom user model
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -120,14 +129,52 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+# Google Cloud Storage Settings
+# These settings are used when USE_GCS is True.
+USE_GCS = config('USE_GCS', default=False, cast=bool)
 
-# Media files
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+if USE_GCS:
+    from storages.backends.gcloud import GoogleCloudStorage
+
+    GS_BUCKET_NAME = config('GS_BUCKET_NAME')
+    GS_SERVICE_ACCOUNT_NAME = config('GS_SERVICE_ACCOUNT_NAME', default=None)
+
+    # Define separate storage classes for public static files and private media files.
+    class StaticStorage(GoogleCloudStorage):
+        def __init__(self, *args, **kwargs):
+            kwargs['location'] = 'static'
+            kwargs['default_acl'] = 'publicRead'
+            super().__init__(*args, **kwargs)
+
+    class MediaStorage(GoogleCloudStorage):
+        def __init__(self, *args, **kwargs):
+            kwargs['location'] = 'media'
+            kwargs['querystring_auth'] = True
+            kwargs['url_expiration'] = 3600  # 1 hour
+            kwargs['service_account_name'] = GS_SERVICE_ACCOUNT_NAME
+            super().__init__(*args, **kwargs)
+
+    # Assign the custom storage classes
+    STATICFILES_STORAGE = 'config.settings.StaticStorage'
+    DEFAULT_FILE_STORAGE = 'config.settings.MediaStorage'
+
+    # URLs
+    STATIC_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/static/'
+    MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/media/'
+    
+    STATIC_ROOT = "static/"
+    MEDIA_ROOT = "media/"
+
+else:
+    # Static files (CSS, JavaScript, Images)
+    STATIC_URL = '/static/'
+    STATIC_ROOT = BASE_DIR / 'staticfiles'
+    STATICFILES_DIRS = [BASE_DIR / 'static']
+
+    # Media files
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = BASE_DIR / 'media'
+""
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
